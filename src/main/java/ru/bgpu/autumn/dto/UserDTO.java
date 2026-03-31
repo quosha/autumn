@@ -1,26 +1,17 @@
-package ru.bgpu.autumn.models;
+package ru.bgpu.autumn.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import ru.bgpu.autumn.dto.UserDTO;
+public class UserDTO {
 
-@Entity
-@Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue
     private Long id;
 
     private String name;
     private String login;
 
-    public User() {
+    public UserDTO() {
     }
 
-    public User(String name, String login) {
+    public UserDTO(Long id, String name, String login) {
+        this.id = id;
         this.name = name;
         this.login = login;
     }
@@ -47,9 +38,5 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
-    }
-
-    public UserDTO toDto() {
-        return new UserDTO(id, login, name);
     }
 }
