@@ -8,11 +8,16 @@ import ru.bgpu.autumn.repositories.UserRepository;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
 
     @Autowired UserRepository userRepository;
+
+    public Optional<User> getByLogin(String login) {
+        return userRepository.getOneByLogin(login);
+    }
 
     public User save(User user) {
         return userRepository.save(user);

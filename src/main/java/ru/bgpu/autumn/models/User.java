@@ -16,6 +16,7 @@ public class User {
 
     private String name;
     private String login;
+    private String password;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Message> messages;
@@ -65,5 +66,13 @@ public class User {
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
