@@ -24,6 +24,9 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Room> rooms = new ArrayList();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Group> groups = new ArrayList();
+
     public User() {
     }
 
@@ -74,5 +77,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 }

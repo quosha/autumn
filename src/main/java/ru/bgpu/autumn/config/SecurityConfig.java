@@ -62,6 +62,7 @@ public class SecurityConfig {
                                         }
                                     }
                             );
+                            res.setContentType("application-json");
                             res.setStatus(HttpServletResponse.SC_OK);
                         })
                         .failureHandler((req, res, exp) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED))

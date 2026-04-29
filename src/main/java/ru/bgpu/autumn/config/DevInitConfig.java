@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.bgpu.autumn.models.Message;
 import ru.bgpu.autumn.models.Room;
 import ru.bgpu.autumn.models.User;
+import ru.bgpu.autumn.services.GroupService;
 import ru.bgpu.autumn.services.MessageService;
 import ru.bgpu.autumn.services.RoomService;
 import ru.bgpu.autumn.services.UserService;
@@ -22,9 +23,12 @@ public class DevInitConfig implements CommandLineRunner {
     @Autowired MessageService messageService;
     @Autowired RoomService roomService;
     @Autowired PasswordEncoder passwordEncoder;
+    @Autowired GroupService groupService;
 
     @Override
     public void run(String... args) throws Exception {
+
+        groupService.initGroup();
 
         Random random = new Random();
 
