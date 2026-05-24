@@ -1,10 +1,12 @@
 package ru.bgpu.autumn.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.bgpu.autumn.dto.MessageDTO;
 import ru.bgpu.autumn.dto.RoomDTO;
+import ru.bgpu.autumn.exceptions.ResourceNotFoundException;
 import ru.bgpu.autumn.models.Message;
 import ru.bgpu.autumn.models.Room;
 import ru.bgpu.autumn.models.User;
@@ -22,6 +24,7 @@ public class RoomController {
     @Autowired private RoomService roomService;
     @Autowired private MessageService messageService;
     @Autowired private UserService userService;
+    @Autowired private SimpMessagingTemplate messagingTemplate;
 
     @GetMapping("/my")
     List<RoomDTO> myRooms(Authentication authentication) {
@@ -30,10 +33,18 @@ public class RoomController {
                 .map(user -> user.getRooms().stream()
                         .map(r -> new RoomDTO(r.getId(), r.getName()))
                         .collect(Collectors.toList()))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден"));
+    }
+
+    @GetMapping("/{id}")
+    RoomDTO getRoom(@PathVariable Long id) {
+        Room room = roomService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Комната не найдена"));
+        return new RoomDTO(room.getId(), room.getName());
     }
 
     @GetMapping("/{id}/messages")
+
     List<MessageDTO> messages(@PathVariable Long id) {
         return messageService.findByRoomId(id)
                 .stream()
@@ -53,19 +64,23 @@ public class RoomController {
             @RequestBody MessageDTO dto) {
 
         Room room = roomService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Room not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Комната не найдена"));
         User user = userService.getByLogin(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден"));
 
         Message message = new Message(user, dto.getText());
         message.setRoom(room);
         message = messageService.save(message);
 
-        return new MessageDTO(
+        MessageDTO result = new MessageDTO(
                 message.getId(),
                 message.getText(),
                 message.getUser().getName(),
                 message.getRoom().getId(),
                 message.getTimestamp());
+
+        messagingTemplate.convertAndSend("/topic/rooms/" + id, result);
+
+        return result;
     }
 }

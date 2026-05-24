@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.bgpu.autumn.dto.UserCreateDTO;
 import ru.bgpu.autumn.dto.UserDTO;
+import ru.bgpu.autumn.exceptions.ResourceNotFoundException;
 import ru.bgpu.autumn.models.User;
 import ru.bgpu.autumn.services.GroupService;
 import ru.bgpu.autumn.services.UserService;
@@ -37,7 +38,7 @@ public class UserController {
         return userService
                 .getByLogin(authentication.getName())
                 .map(User::toDto)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден"));
     }
 
     @PostMapping
@@ -57,7 +58,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     UserDTO update(@PathVariable Long id, @RequestBody UserCreateDTO dto) {
         User user = userService.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден"));
         user.setName(dto.getName());
         user.setLogin(dto.getLogin());
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
