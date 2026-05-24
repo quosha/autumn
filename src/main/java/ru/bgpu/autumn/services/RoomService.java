@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.bgpu.autumn.models.Room;
 import ru.bgpu.autumn.repositories.RoomRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,4 +20,9 @@ public class RoomService {
     public Optional<Room> findById(Long id) {
         return roomRepository.findById(id);
     }
+
+    public List<Room> searchByName(String name) {
+        return roomRepository.findByNameContainingIgnoreCase(name);
+    }
 }
+

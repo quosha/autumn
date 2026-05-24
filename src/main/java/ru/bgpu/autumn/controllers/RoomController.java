@@ -36,6 +36,45 @@ public class RoomController {
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден"));
     }
 
+    @GetMapping("/search")
+    List<RoomDTO> searchRooms(@RequestParam String q) {
+        return roomService.searchByName(q)
+                .stream()
+                .map(r -> new RoomDTO(r.getId(), r.getName()))
+                .collect(Collectors.toList());
+    }
+
+    @PostMapping
+    RoomDTO createRoom(Authentication authentication, @RequestBody RoomDTO dto) {
+        User user = userService.getByLogin(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден"));
+
+        Room room = new Room(dto.getName());
+        room.getUsers().add(user);
+        room = roomService.save(room);
+
+        user.getRooms().add(room);
+        userService.save(user);
+
+        return new RoomDTO(room.getId(), room.getName());
+    }
+
+    @PostMapping("/{id}/join")
+    RoomDTO joinRoom(Authentication authentication, @PathVariable Long id) {
+        User user = userService.getByLogin(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден"));
+
+        Room room = roomService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Комната не найдена"));
+
+        if (!room.getUsers().contains(user)) {
+            user.getRooms().add(room);
+            userService.save(user);
+        }
+
+        return new RoomDTO(room.getId(), room.getName());
+    }
+
     @GetMapping("/{id}")
     RoomDTO getRoom(@PathVariable Long id) {
         Room room = roomService.findById(id)
@@ -44,6 +83,7 @@ public class RoomController {
     }
 
     @GetMapping("/{id}/messages")
+
 
     List<MessageDTO> messages(@PathVariable Long id) {
         return messageService.findByRoomId(id)
