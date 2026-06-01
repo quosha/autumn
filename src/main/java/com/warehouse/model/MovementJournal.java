@@ -1,9 +1,7 @@
 package com.warehouse.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "movement_journal")
@@ -28,11 +26,11 @@ public class MovementJournal {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private WarehouseUser user;
 
     public MovementJournal() {}
 
-    public MovementJournal(Product product, MovementType movementType, Integer quantity, User user) {
+    public MovementJournal(Product product, MovementType movementType, Integer quantity, WarehouseUser user) {
         this.product = product;
         this.movementType = movementType;
         this.quantity = quantity;
@@ -55,6 +53,6 @@ public class MovementJournal {
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public WarehouseUser getUser() { return user; }
+    public void setUser(WarehouseUser user) { this.user = user; }
 }

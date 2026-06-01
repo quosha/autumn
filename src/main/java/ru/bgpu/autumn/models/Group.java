@@ -1,7 +1,6 @@
 package ru.bgpu.autumn.models;
 
-import jakarta.persistence.*;
-import org.jspecify.annotations.Nullable;
+import javax.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import ru.bgpu.autumn.util.AutumnDescription;
 
@@ -73,7 +72,7 @@ public class Group implements GrantedAuthority {
     }
 
     @Override
-    public @Nullable String getAuthority() {
+    public String getAuthority() {
         return name;
     }
 

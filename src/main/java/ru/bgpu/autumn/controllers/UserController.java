@@ -61,7 +61,7 @@ public class UserController {
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден"));
         user.setName(dto.getName());
         user.setLogin(dto.getLogin());
-        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+        if (dto.getPassword() != null && !dto.getPassword().trim().isEmpty()) {
             user.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
         user.getGroups().clear();

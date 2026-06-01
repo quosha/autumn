@@ -1,7 +1,7 @@
 package ru.bgpu.autumn.models;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity

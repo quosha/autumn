@@ -1,10 +1,11 @@
 package ru.bgpu.autumn.models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import ru.bgpu.autumn.dto.UserDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -61,7 +62,7 @@ public class User {
 
     public UserDTO toDto() {
         UserDTO dto =  new UserDTO(id, name, login);
-        dto.setGroups(groups.stream().map(Group::getName).toList());
+        dto.setGroups(groups.stream().map(Group::getName).collect(Collectors.toList()));
         return dto;
     }
 

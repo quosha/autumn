@@ -1,12 +1,12 @@
 package com.warehouse.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "warehouse_users")
+public class WarehouseUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,15 +21,15 @@ public class User {
 
     @ManyToMany
     @JoinTable(
-        name = "user_groups",
+        name = "warehouse_user_groups",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "group_id")
     )
-    private Set<Group> groups = new HashSet<>();
+    private Set<WarehouseGroup> groups = new HashSet<>();
 
-    public User() {}
+    public WarehouseUser() {}
 
-    public User(String username, String password, String email) {
+    public WarehouseUser(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -43,6 +43,6 @@ public class User {
     public void setPassword(String password) { this.password = password; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-    public Set<Group> getGroups() { return groups; }
-    public void setGroups(Set<Group> groups) { this.groups = groups; }
+    public Set<WarehouseGroup> getGroups() { return groups; }
+    public void setGroups(Set<WarehouseGroup> groups) { this.groups = groups; }
 }

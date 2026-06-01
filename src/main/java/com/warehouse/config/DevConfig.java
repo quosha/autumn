@@ -17,24 +17,24 @@ public class DevConfig {
     CommandLineRunner initDatabase(
             CategoryRepository categoryRepository,
             ProductRepository productRepository,
-            UserRepository userRepository,
-            GroupRepository groupRepository,
+            WarehouseUserRepository warehouseUserRepository,
+            WarehouseGroupRepository warehouseGroupRepository,
             MovementJournalRepository movementJournalRepository) {
 
         return args -> {
-            Group storekeeper = groupRepository.save(new Group("STOREKEEPER", "Обычный кладовщик"));
-            Group admin = groupRepository.save(new Group("ADMIN", "Администратор склада"));
+            WarehouseGroup storekeeper = warehouseGroupRepository.save(new WarehouseGroup("STOREKEEPER", "Обычный кладовщик"));
+            WarehouseGroup admin = warehouseGroupRepository.save(new WarehouseGroup("ADMIN", "Администратор склада"));
 
-            User ivanov = userRepository.save(new User("ivanov", "pass1", "ivanov@warehouse.ru"));
-            User petrov = userRepository.save(new User("petrov", "pass2", "petrov@warehouse.ru"));
-            User sidorov = userRepository.save(new User("sidorov", "pass3", "sidorov@warehouse.ru"));
+            WarehouseUser ivanov = warehouseUserRepository.save(new WarehouseUser("ivanov", "pass1", "ivanov@warehouse.ru"));
+            WarehouseUser petrov = warehouseUserRepository.save(new WarehouseUser("petrov", "pass2", "petrov@warehouse.ru"));
+            WarehouseUser sidorov = warehouseUserRepository.save(new WarehouseUser("sidorov", "pass3", "sidorov@warehouse.ru"));
 
             ivanov.getGroups().add(storekeeper);
             petrov.getGroups().add(storekeeper);
             sidorov.getGroups().add(admin);
-            userRepository.save(ivanov);
-            userRepository.save(petrov);
-            userRepository.save(sidorov);
+            warehouseUserRepository.save(ivanov);
+            warehouseUserRepository.save(petrov);
+            warehouseUserRepository.save(sidorov);
 
             Category electronics = categoryRepository.save(new Category("Электроника"));
             Category furniture = categoryRepository.save(new Category("Мебель"));

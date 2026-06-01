@@ -1,12 +1,12 @@
 package com.warehouse.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "groups")
-public class Group {
+@Table(name = "warehouse_groups")
+public class WarehouseGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,11 +17,11 @@ public class Group {
     private String description;
 
     @ManyToMany(mappedBy = "groups")
-    private Set<User> users = new HashSet<>();
+    private Set<WarehouseUser> users = new HashSet<>();
 
-    public Group() {}
+    public WarehouseGroup() {}
 
-    public Group(String name, String description) {
+    public WarehouseGroup(String name, String description) {
         this.name = name;
         this.description = description;
     }
@@ -32,6 +32,6 @@ public class Group {
     public void setName(String name) { this.name = name; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public Set<User> getUsers() { return users; }
-    public void setUsers(Set<User> users) { this.users = users; }
+    public Set<WarehouseUser> getUsers() { return users; }
+    public void setUsers(Set<WarehouseUser> users) { this.users = users; }
 }
