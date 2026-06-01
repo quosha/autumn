@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "categories")
-public class Category {
+@Table(name = "repair_categories")
+public class RepairCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,11 +15,11 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category")
-    private List<Product> products = new ArrayList<>();
+    private List<ServiceRequest> requests = new ArrayList<>();
 
-    public Category() {}
+    public RepairCategory() {}
 
-    public Category(String name) {
+    public RepairCategory(String name) {
         this.name = name;
     }
 
@@ -27,6 +27,6 @@ public class Category {
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-    public List<Product> getProducts() { return products; }
-    public void setProducts(List<Product> products) { this.products = products; }
+    public List<ServiceRequest> getRequests() { return requests; }
+    public void setRequests(List<ServiceRequest> requests) { this.requests = requests; }
 }
