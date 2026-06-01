@@ -1,6 +1,6 @@
 package ru.bgpu.autumn.models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import ru.bgpu.autumn.dto.UserDTO;
 
 import java.util.ArrayList;
