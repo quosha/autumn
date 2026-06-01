@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Configuration
 @Profile("dev")
@@ -15,19 +15,19 @@ public class DevConfig {
 
     @Bean
     CommandLineRunner initDatabase(
-            CategoryRepository categoryRepository,
-            ProductRepository productRepository,
+            RepairCategoryRepository repairCategoryRepository,
+            ClientRepository clientRepository,
             WarehouseUserRepository warehouseUserRepository,
             WarehouseGroupRepository warehouseGroupRepository,
-            MovementJournalRepository movementJournalRepository) {
+            ServiceRequestRepository serviceRequestRepository) {
 
         return args -> {
-            WarehouseGroup storekeeper = warehouseGroupRepository.save(new WarehouseGroup("STOREKEEPER", "Обычный кладовщик"));
-            WarehouseGroup admin = warehouseGroupRepository.save(new WarehouseGroup("ADMIN", "Администратор склада"));
+            WarehouseGroup storekeeper = warehouseGroupRepository.save(new WarehouseGroup("STOREKEEPER", "Обычный мастер"));
+            WarehouseGroup admin = warehouseGroupRepository.save(new WarehouseGroup("ADMIN", "Администратор сервисного центра"));
 
-            WarehouseUser ivanov = warehouseUserRepository.save(new WarehouseUser("ivanov", "pass1", "ivanov@warehouse.ru"));
-            WarehouseUser petrov = warehouseUserRepository.save(new WarehouseUser("petrov", "pass2", "petrov@warehouse.ru"));
-            WarehouseUser sidorov = warehouseUserRepository.save(new WarehouseUser("sidorov", "pass3", "sidorov@warehouse.ru"));
+            WarehouseUser ivanov = warehouseUserRepository.save(new WarehouseUser("ivanov", "pass1", "ivanov@service.ru"));
+            WarehouseUser petrov = warehouseUserRepository.save(new WarehouseUser("petrov", "pass2", "petrov@service.ru"));
+            WarehouseUser sidorov = warehouseUserRepository.save(new WarehouseUser("sidorov", "pass3", "sidorov@service.ru"));
 
             ivanov.getGroups().add(storekeeper);
             petrov.getGroups().add(storekeeper);
@@ -36,45 +36,47 @@ public class DevConfig {
             warehouseUserRepository.save(petrov);
             warehouseUserRepository.save(sidorov);
 
-            Category electronics = categoryRepository.save(new Category("Электроника"));
-            Category furniture = categoryRepository.save(new Category("Мебель"));
-            Category stationery = categoryRepository.save(new Category("Канцелярия"));
-            Category clothing = categoryRepository.save(new Category("Одежда"));
-            Category food = categoryRepository.save(new Category("Продукты"));
+            RepairCategory laptop = repairCategoryRepository.save(new RepairCategory("Ноутбук"));
+            RepairCategory tv = repairCategoryRepository.save(new RepairCategory("Телевизор"));
+            RepairCategory systemBlock = repairCategoryRepository.save(new RepairCategory("Системный блок"));
+            RepairCategory smartphone = repairCategoryRepository.save(new RepairCategory("Смартфон"));
+            RepairCategory printer = repairCategoryRepository.save(new RepairCategory("Принтер"));
 
-            Product laptop = productRepository.save(new Product("Ноутбук", new BigDecimal("85000"), electronics));
-            Product desk = productRepository.save(new Product("Письменный стол", new BigDecimal("12000"), furniture));
-            Product paper = productRepository.save(new Product("Бумага A4", new BigDecimal("500"), stationery));
-            Product jacket = productRepository.save(new Product("Куртка", new BigDecimal("4500"), clothing));
-            Product coffee = productRepository.save(new Product("Кофе", new BigDecimal("800"), food));
+            Client smith = clientRepository.save(new Client("John", "Smith", "+1-555-0101", "john@mail.com"));
+            Client doe = clientRepository.save(new Client("Jane", "Doe", "+1-555-0102", "jane@mail.com"));
+            Client brown = clientRepository.save(new Client("Bob", "Brown", "+1-555-0103", "bob@mail.com"));
 
-            laptop.setAvailableCopies(10);
-            desk.setAvailableCopies(5);
-            paper.setAvailableCopies(100);
-            jacket.setAvailableCopies(20);
-            coffee.setAvailableCopies(50);
-            productRepository.save(laptop);
-            productRepository.save(desk);
-            productRepository.save(paper);
-            productRepository.save(jacket);
-            productRepository.save(coffee);
+            ServiceRequest r1 = new ServiceRequest(smith, laptop, RequestStatus.COMPLETED, ivanov);
+            r1.setRepairDeadline(LocalDate.of(2026, 5, 10));
+            r1.setCost(3000);
+            serviceRequestRepository.save(r1);
 
-            movementJournalRepository.save(new MovementJournal(laptop, MovementType.INCOME, 10, sidorov));
-            movementJournalRepository.save(new MovementJournal(desk, MovementType.INCOME, 5, sidorov));
-            movementJournalRepository.save(new MovementJournal(paper, MovementType.INCOME, 100, ivanov));
-            movementJournalRepository.save(new MovementJournal(jacket, MovementType.INCOME, 20, petrov));
-            movementJournalRepository.save(new MovementJournal(coffee, MovementType.INCOME, 50, ivanov));
+            ServiceRequest r2 = new ServiceRequest(doe, tv, RequestStatus.IN_WORK, petrov);
+            r2.setRepairDeadline(LocalDate.of(2026, 6, 1));
+            r2.setCost(5000);
+            serviceRequestRepository.save(r2);
 
-            movementJournalRepository.save(new MovementJournal(laptop, MovementType.OUTCOME, 2, petrov));
-            movementJournalRepository.save(new MovementJournal(paper, MovementType.OUTCOME, 10, ivanov));
-            movementJournalRepository.save(new MovementJournal(jacket, MovementType.OUTCOME, 5, petrov));
+            ServiceRequest r3 = new ServiceRequest(brown, systemBlock, RequestStatus.CREATED, ivanov);
+            r3.setRepairDeadline(LocalDate.of(2026, 6, 15));
+            r3.setCost(2500);
+            serviceRequestRepository.save(r3);
 
-            System.out.println("=== Данные инициализированы ===");
+            ServiceRequest r4 = new ServiceRequest(smith, smartphone, RequestStatus.READY, petrov);
+            r4.setRepairDeadline(LocalDate.of(2026, 5, 25));
+            r4.setCost(1500);
+            serviceRequestRepository.save(r4);
+
+            ServiceRequest r5 = new ServiceRequest(doe, printer, RequestStatus.CANCELLED, ivanov);
+            r5.setRepairDeadline(LocalDate.of(2026, 5, 5));
+            r5.setCost(1000);
+            serviceRequestRepository.save(r5);
+
+            System.out.println("=== Данные сервисного центра инициализированы ===");
             System.out.println("Пользователи: ivanov (storekeeper), petrov (storekeeper), sidorov (admin)");
             System.out.println("Группы: STOREKEEPER, ADMIN");
-            System.out.println("Категории: Электроника, Мебель, Канцелярия, Одежда, Продукты");
-            System.out.println("Товары: Ноутбук (10), Стол (5), Бумага A4 (100), Куртка (20), Кофе (50)");
-            System.out.println("Проводок в журнале: " + movementJournalRepository.count());
+            System.out.println("Категории ремонта: Ноутбук, Телевизор, Системный блок, Смартфон, Принтер");
+            System.out.println("Клиенты: John Smith, Jane Doe, Bob Brown");
+            System.out.println("Заявок в журнале: " + serviceRequestRepository.count());
         };
     }
 }
