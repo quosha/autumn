@@ -35,13 +35,15 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf().disable()
+                .csrf().ignoringAntMatchers("/h2-console/**").disable()
+                .headers().frameOptions().sameOrigin()
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/", "/home").permitAll()
+                    .antMatchers("/", "/home", "/h2-console/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                 .formLogin()
