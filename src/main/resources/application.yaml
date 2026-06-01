@@ -1,0 +1,48 @@
+spring:
+  profiles:
+    active: dev
+
+---
+spring:
+  main:
+    allow-circular-references: true
+  config:
+    activate:
+      on-profile: dev
+  application:
+    name: autumn
+  datasource:
+    url: jdbc:postgresql://localhost:5432/demo
+    username: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      # ddl-auto options: none, validate, update, create, create-drop
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    # Shows the SQL queries in the console (useful for development)
+    show-sql: true
+
+
+---
+spring:
+  main:
+    allow-circular-references: true
+  config:
+    activate:
+      on-profile: prod
+  application:
+    name: autumn
+  datasource:
+    url: jdbc:postgresql://localhost:5432/main
+    username: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
