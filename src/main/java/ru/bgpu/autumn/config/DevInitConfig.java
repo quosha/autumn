@@ -33,9 +33,9 @@ public class DevInitConfig implements CommandLineRunner {
 
         Random random = new Random();
 
-        Group userGroup = groupService.getByName(Group.GROUP_USER).orElseThrow();
-        Group adminGroup = groupService.getByName(Group.GROUP_ADMIN).orElseThrow();
-        Group managerGroup = groupService.getByName(Group.GROUP_MANAGER).orElseThrow();
+        Group userGroup = groupService.getByName(Group.GROUP_USER).orElseThrow(() -> new RuntimeException("Group not found"));
+        Group adminGroup = groupService.getByName(Group.GROUP_ADMIN).orElseThrow(() -> new RuntimeException("Group not found"));
+        Group managerGroup = groupService.getByName(Group.GROUP_MANAGER).orElseThrow(() -> new RuntimeException("Group not found"));
 
         Room room = roomService.save(new Room("Общая комината"));
         for(int i = 0; i < 10; i++) {
